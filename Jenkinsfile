@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -21,16 +20,33 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_TOKEN'
+                )]) {
+                    sh '''
+                        set +x
+                        echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
+                        trap 'docker logout' EXIT
+                        docker tag devops-flask-app muffashal/devops-flask-app:latest
+                        docker push muffashal/devops-flask-app:latest
+                    '''
+                }
+            }
+        }
+
         stage('Deploy Application') {
             steps {
                 sh '''
                     docker rm -f flask-container || true
-
                     docker run -d \
-                      --name flask-container \
-                      -p 5000:5000 \
-                      --restart unless-stopped \
-                      devops-flask-app
+                        --name flask-container \
+                        -p 5000:5000 \
+                        --restart unless-stopped \
+                        devops-flask-app
                 '''
             }
         }
