@@ -13,3 +13,4 @@ using Git, GitHub, Docker, Jenkins, AWS and monitoring tools.
 - AWS
 - Prometheus
 - Grafana
+Automatic CI/CD trigger test
