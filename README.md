@@ -1,5 +1,5 @@
 
-# End-to-End DevOps CI/CD Pipeline with Monitoring
+# DeployOps – End-to-End CI/CD Automation and Real-Time Monitoring
 
 ## Project Overview
 
